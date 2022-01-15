@@ -1,0 +1,22 @@
+{
+  "name": "demo-blog-aurora",
+  "version": "1.0.0",
+  "description": "aurora blog",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vuepress dev docs",
+    "build": "vuepress build docs"
+  },
+  "author": "qsyyke",
+  "license": "ISC",
+  "dependencies": {
+    "vuepress": "2.0.0-beta.29",
+    "@vuepress/plugin-search": "2.0.0-beta.29",
+    "vuepress-plugin-archive": "latest",
+    "vuepress-plugin-bubble": "latest",
+    "vuepress-plugin-coze": "latest",
+    "vuepress-plugin-player": "latest",
+    "vuepress-theme-aurora": "latest"
+  }
+}

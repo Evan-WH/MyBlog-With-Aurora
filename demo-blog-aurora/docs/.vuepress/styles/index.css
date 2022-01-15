@@ -1,0 +1,17 @@
+/* 在此文件中，使用palette.css文件中的变量，你可以在此文件，直接覆盖主题的所有css样式，比如下面这些 */
+
+
+/*隐藏滚动条*/
+
+body::-webkit-scrollbar {
+    /*display: none;*/
+}
+
+.aurora-stick:before {
+    font-family: "iconfont" !important;
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    content: "\e607";
+}
