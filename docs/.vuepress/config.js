@@ -38,9 +38,9 @@ module.exports = {
         [
             'vuepress-plugin-coze',
             {
-                appId: '在leancloud中查看你的appId',
-                appKey: '在leancloud中查看你的appKey',
-                masterKey: '在leancloud中查看你的masterKey',
+                appId: '1P0mOx3mLrgpx12Dh1KJq3xt-MdYXbMMI',
+                appKey: 'j776RXi9GcC675DBCdGpwsiA',
+                masterKey: 'kiwcADbMFQB2MI1wzFWdHsDy',
                 //下面这些是可选的
                 avatarPath: '/avatar.jpg', //说说头像url
                 registerPath: '/aurora-register', //自定义插件默认提供的注册页面路由，请在前面加上/
