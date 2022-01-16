@@ -9,6 +9,7 @@
 
 const { path } = require("@vuepress/utils");
 module.exports = {
+    dest: 'public',
     //base: '/REPO/',//如果你准备发布到 https://<USERNAME>.github.io/<REPO>/ ，也就是说你的仓库地址是 https://github.com/<USERNAME>/<REPO> ，则将 base 设置为 "/<REPO>/"。
 
     extendsMarkdown: (md) => {
@@ -118,7 +119,9 @@ module.exports = {
             'archive',
             {
                 //需要排除的页面url，在该数组里面的路径，都不会被统计
-                excludes: ['/404.html', '/about/', '/mood/', '/link/', '/tag/', '/photo/'],
+                excludes: ['/404.html', '/index.html', '/about/', '/mood/', '/link/', '/tag/', '/photo/',
+                    '/aurora-archive/', '/aurora-coze/', '/aurora-music/', '/aurora-register/', '/archive/',
+                ],
                 //当某篇文章没有标题时，将使用下面值进行替换
                 noTitle: '暂时没有标题配置'
             }
@@ -158,8 +161,8 @@ module.exports = {
         ]*/
     ],
 
-    //theme: path.resolve(__dirname, "../../Aurora-theme/lib/node/index.js"),//这里使用本地主题 打开此注释将使用本地主题 此处和theme: 'aurora'，只能二选一
-    theme: 'aurora', //如果需要使用在线主题，那么打开此注释
+    theme: path.resolve(__dirname, "../../Aurora-theme/lib/node/index.js"), //这里使用本地主题 打开此注释将使用本地主题 此处和theme: 'aurora'，只能二选一
+    // theme: 'aurora', //如果需要使用在线主题，那么打开此注释
 
     //站点title
     title: "千篇壹律",
@@ -693,7 +696,8 @@ module.exports = {
 
         //公告，是一个数组，支持图片，HTML
         message: [
-            '测试发布',
+            '测试v1.0发布 2022.01.14',
+
         ],
 
         //文章底部最大推荐文章数 默认值为30
@@ -812,7 +816,7 @@ module.exports = {
         },
 
         //是否展示从网络上请求回来的说说 如果启用，请自己写后台服务，修改源码，目前暂未在主题中加入，期望在将来能够实现，组件位置docs/.vuepress/theme/lib/client/components/Mood.vue
-        showOnlineMood: true,
+        showOnlineMood: false,
 
         //是否开启在线添加说说功能，如果需要，请自己写后台，修改源码，目前在主题内部暂未加入 组件位置docs/.vuepress/theme/lib/client/components/child/AddMood.vue
         showMoodEdit: false,
@@ -858,7 +862,7 @@ module.exports = {
             // "https://picoss.cco.vin/animate/wall/5332.png",
             // "https://picoss.cco.vin/animate/wall/6202.png", //使用网络上的图片
             '/bg/1.jpg', //使用本地图片
-            // '/bg/3.jpg',
+            '/bg/3.jpg',
         ],
         /* homeWps: [
              '/bg/1.jpg',
@@ -896,7 +900,7 @@ module.exports = {
         sidebarCatalogLevel: 3,
 
         //首页文章列表封面图api接口
-        homePageImgApi: "https://api.ixiaowai.cn/api/api.php",
+        homePageImgApi: "https://api.ixiaowai.cn/gqapi/gqapi.php",
 
         //手机端侧边栏横线分割文字，默认为Aurora
         mobileCutText: "千篇壹律",

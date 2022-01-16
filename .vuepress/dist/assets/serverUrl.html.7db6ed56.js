@@ -1,1 +1,0 @@
-const e={key:"v-63c30fee",path:"/Aurora-plugin/vuepress-plugin-player/serverUrl.html",title:"",lang:"en-US",frontmatter:{},excerpt:"",headers:[],git:{updatedTime:1642297792e3,contributors:[{name:"Evan-WH",email:"2637405542@qq.com",commits:2}]},filePathRelative:"Aurora-plugin/vuepress-plugin-player/serverUrl.md"};export{e as data};
