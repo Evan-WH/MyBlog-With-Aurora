@@ -1,0 +1,1 @@
+const e={key:"v-582cb734",path:"/Aurora-plugin/vuepress-plugin-coze/",title:"",lang:"en-US",frontmatter:{},excerpt:"",headers:[],git:{updatedTime:1642297792e3,contributors:[{name:"Evan-WH",email:"2637405542@qq.com",commits:2}]},filePathRelative:"Aurora-plugin/vuepress-plugin-coze/README.md"};export{e as data};
