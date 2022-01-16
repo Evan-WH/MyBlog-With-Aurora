@@ -674,7 +674,6 @@ module.exports = {
         //页脚信息，支持HTML，这是一个数组
         footer: [
             "Copyright © by Evan-WH.",
-            "<a target='_blank' style='display:inline-block;text-decoration:none;height:20px;line-height:20px;'><img src='' style='float:left;'/></a>",
         ],
 
         //是否显示页脚，控制全局
