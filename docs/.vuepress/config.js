@@ -132,7 +132,7 @@ module.exports = {
         [
             "script",
             {
-                src: "https://at.alicdn.com/t/font_2849934_v6y652peian.js",
+                src: "https://at.alicdn.com/t/font_3144524_7l6vulm3on7.js",
             },
         ],
         //设置站点icon
@@ -385,28 +385,8 @@ module.exports = {
         customRandomValue: 'Vuepress-theme-Aurora',
 
         //社交信息，首页PC端至多显示19个，手机端至多显示7个，侧边栏不影响
+
         socials: [{
-                //社交链接
-                aHref: "https://c.tb.cn/s5.f3nql",
-                imgSrc: "https://s4.ax1x.com/2022/01/15/7YZtEj.png", //  从v1.3.2开始久移除次配置，以前版本用于社交ico图标配置
-
-                //true为在首页显示，反之
-                isHome: true,
-
-                //是否显示此社交信息,如果为false，尽管isHome=true，sidebar=true，也不会显示
-                show: true,
-
-                //是否在侧边栏显示
-                sidebar: true,
-
-                //使用阿里图标 使用的是阿里图标库，我也挑选部分图标，请进入http://ico.cco.vin/theme查看
-                symbol: '#icon-qq',
-
-
-                //鼠标移入此图标时，显示的图片，适用于微信等通过二维码添加好友
-                // showImgSrc: "https://ooszy.cco.vin/img/blog-public/wechat.jpg",
-            },
-            {
                 aHref: "javascript:;",
                 //imgSrc: /assets/img/ico/wechat.svg,
                 showImgSrc: "https://s4.ax1x.com/2022/01/15/7J1b7T.jpg",
@@ -415,12 +395,13 @@ module.exports = {
                 symbol: '#icon-weixin',
                 sidebar: true
             },
+
             {
                 aHref: "https://github.com/Evan-WH",
                 isHome: true,
                 show: true,
                 sidebar: true,
-                symbol: '#icon-github-fill'
+                symbol: '#icon-github'
             },
             // {
             //     aHref: "https://stackoverflow.com/",
@@ -448,7 +429,28 @@ module.exports = {
                 isHome: true,
                 show: true,
                 sidebar: true,
-                symbol: '#icon-email'
+                symbol: '#icon-youxiang'
+            },
+            {
+                //社交链接
+                aHref: "https://c.tb.cn/s5.f3nql",
+                // imgSrc: "https://s4.ax1x.com/2022/01/15/7YZtEj.png", //  从v1.3.2开始久移除次配置，以前版本用于社交ico图标配置
+
+                //true为在首页显示，反之
+                isHome: true,
+
+                //是否显示此社交信息,如果为false，尽管isHome=true，sidebar=true，也不会显示
+                show: true,
+
+                //是否在侧边栏显示
+                sidebar: true,
+
+                //使用阿里图标 使用的是阿里图标库，我也挑选部分图标，请进入http://ico.cco.vin/theme查看
+                symbol: '#icon-xianyu',
+
+
+                //鼠标移入此图标时，显示的图片，适用于微信等通过二维码添加好友
+                // showImgSrc: "https://ooszy.cco.vin/img/blog-public/wechat.jpg",
             },
         ],
 
