@@ -921,13 +921,13 @@ module.exports = {
          * */
 
         //文章h2标签的icon
-        articleH2Icon: '🌸',
+        articleH2Icon: '🍥',
 
         //文章h3标签的icon
-        articleH3Icon: '🐳',
+        articleH3Icon: '🍖',
 
         //文章h4标签及h4标签之后的标签的icon
-        articleH4Icon: '⛄',
+        articleH4Icon: '🍄',
 
         //v1.6.4新增配置
         sidebarAvatar: 'https://s4.ax1x.com/2022/01/15/7JlkqK.png',
