@@ -863,8 +863,8 @@ module.exports = {
             // "https://picoss.cco.vin/animate/wall/734386.png",
             // "https://picoss.cco.vin/animate/wall/5332.png",
             // "https://picoss.cco.vin/animate/wall/6202.png", //使用网络上的图片
-            '/bg/1.jpg', //使用本地图片
-            '/bg/3.jpg',
+            // '/bg/1.jpg', //使用本地图片
+            // '/bg/3.jpg',
         ],
         /* homeWps: [
              '/bg/1.jpg',
