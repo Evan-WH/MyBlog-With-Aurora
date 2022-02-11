@@ -26,7 +26,7 @@ module.exports = {
             {
                 locales: {
                     '/': {
-                        placeholder: '请输入搜索内容',
+                        placeholder: 'search',
                     },
                     '/zh/': {
                         placeholder: '搜索',
@@ -506,7 +506,7 @@ module.exports = {
                 bar: false,
                 title: "未来规划",
                 describe: ["前端工程师"],
-                tag: ["tag"],
+                // tag: ["tag"],
                 showTag: true,
             },
             {
@@ -514,19 +514,19 @@ module.exports = {
                 title: "技  能",
                 describe: [{
                         name: "java",
-                        score: 70,
+                        score: 60,
                     },
                     {
                         name: "HTML5",
-                        score: 87,
+                        score: 90,
                     },
                     {
                         name: "javascript",
-                        score: 82,
+                        score: 85,
                     },
                     {
                         name: "css",
-                        score: 73,
+                        score: 90,
                     },
                     {
                         name: "python",
@@ -538,11 +538,11 @@ module.exports = {
                     },
                     {
                         name: "mysql",
-                        score: 82,
+                        score: 70,
                     },
                     {
                         name: "vue",
-                        score: 80,
+                        score: 85,
                     },
                     {
                         name: "spring",
@@ -550,11 +550,11 @@ module.exports = {
                     },
                     {
                         name: "springMVC",
-                        score: 70,
+                        score: 50,
                     },
                     {
                         name: "springBoot",
-                        score: 71,
+                        score: 65,
                     },
                 ],
                 showTag: false,
@@ -578,11 +578,11 @@ module.exports = {
                     },
                     {
                         name: "mybatis",
-                        score: 82,
+                        score: 60,
                     },
                     {
                         name: "vue",
-                        score: 80,
+                        score: 85,
                     },
                 ],
             },
@@ -592,7 +592,7 @@ module.exports = {
                 title: "掌握技能",
                 describe: [{
                         name: "Git",
-                        score: 78,
+                        score: 60,
                     },
                     {
                         name: "Ctrl C+V",
@@ -642,7 +642,7 @@ module.exports = {
 
                 //站点描述
                 describe: "人生若只是初见,何事秋风悲画扇",
-                cover: 'https://ooszy.cco.vin/img/blog-note/image-20211106100103898.png?x-oss-process=style/pictureProcess1'
+                cover: 'https://s4.ax1x.com/2022/01/15/7JTdUI.png'
             }, ]
         }, ],
 
@@ -662,9 +662,9 @@ module.exports = {
             cover: 'https://s4.ax1x.com/2022/01/15/7JTdUI.png',
 
             //自己的头像
-            contact: "email: 2637405542wh@gmail.com, qq:2637405542",
+            contact: "Email: 2637405542wh@gmail.com, qq:2637405542",
             otherDescribe: [
-                '这是一个html的测试<a href="www.iswuhao.cn" target="_blank">这是一个a标签</a>'
+                '<a href="www.iswuhao.cn" target="_blank">申请</a>'
             ]
         },
 
