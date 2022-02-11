@@ -875,14 +875,13 @@ module.exports = {
          ],*/
 
         //手机端首页背景图片
-        /*homeWpsMobile: [
-            "https://ooszy.cco.vin/img/blog-note/881770.jpg",
-            "https://ooszy.cco.vin/img/blog-note/109136.jpg",
-            "https://ooszy.cco.vin/img/blog-note/929842.jpg",
-        ],*/
         homeWpsMobile: [
-            '/bg/1.jpg',
-            '/bg/3.jpg',
+            "https://picoss.cco.vin/animate/wall/404901.png",
+            "https://ooszy.cco.vin/img/blog-note/929842.jpg",
+        ],
+        homeWpsMobile: [
+            // '/bg/1.jpg',
+            // '/bg/3.jpg',
         ],
 
         //首页文章显示条数，默认为4，此值不推荐设置太大
