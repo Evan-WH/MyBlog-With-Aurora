@@ -11,18 +11,15 @@
       </div>
 
       <div class="coze-custom-item-common">
-        <input autocomplete placeholder="请输入邮箱 登录不需要此邮箱" v-model="email" name="email" type="text">
+        <input autocomplete placeholder="请输入邮箱" v-model="email" name="email" type="text">
       </div>
 
       <slot name="cozeCustomCenter"></slot>
-      <div class="coze-custom-item-common coze-custom-button coze-custom-register">
-        <div @click="verifyIdentify">注册</div>
+      <div class="coze-custom-item-common coze-custom-button">
+        <button @click="verifyIdentify">注册</button>
       </div>
-      <div class="coze-custom-item-common coze-custom-button coze-custom-login">
-        <div @click="loginIn">登录</div>
-      </div>
-      <div class="coze-custom-item-common coze-custom-button coze-custom-out">
-        <div @click="loginOut">登出</div>
+      <div class="coze-custom-item-common coze-custom-button">
+        <button @click="loginOut">登出</button>
       </div>
     </form>
     <slot name="cozeCustomBottom"></slot>
@@ -30,21 +27,12 @@
 </template>
 
 <script>
-import { Query, User,Object } from 'leancloud-storage';
-let appId = ''
-let appKey = ''
-let masterKey = ''
-let onlyAdministrator = true;
-let avatar = 'https://ooszy.cco.vin/img/blog-note/avatar-aurora.png'
-try {
-  appId = __APP_ID__;
-  appKey = __APP_KEY__;
-  masterKey = __Master_Key__;
-  avatar = __AVATAR_PATH__;
-  onlyAdministrator = __ONLY_ADMINISTRATOR
-}catch (e) {
-  console.warn("你必须在插件中传入appId,appKey,masterKey配置项")
-}
+const AV = require('leancloud-storage');
+const { Query, User } = AV;
+const appId = __APP_ID__;
+const appKey = __APP_KEY__;
+const masterKey = __Master_Key__;
+const avatar = __AVATAR_PATH__;
 export default {
   name: "CozeLogin",
   data() {
@@ -55,62 +43,13 @@ export default {
       verifyText: '请注册(●￣(ｴ)￣●)',
     }
   },
-  emits: ['cozeLoginOut','cozeLogin','cozeRegister'],
+  emits: ['cozeLoginOut','cozeLogin'],
   methods: {
-    loginIn() {
-      const currentUser = User.current();
-      if (currentUser) {
-        this.$emit("cozeLogin",{
-          loginStatus: 1,
-          message: '你已经登录过了',
-          administrator: currentUser.attributes.administrator,
-          error: '',
-          username: currentUser.attributes.username,
-          email: currentUser.attributes.email,
-          password: this.password
-        })
-        return;
-      }
-
-      if (!this.isValidUsername(this.username) || !this.isValidPassword(this.password)) {
-        this.$emit("cozeLogin",{
-          loginStatus: 0,
-          message: '用户名,密码输入不正确',
-          administrator: 0,
-          error: '',
-          username: this.username,
-          email: '',
-          password: this.password
-        })
-        return;
-      }
-      User.logIn(this.username, this.password).then((user) => {
-        this.$emit("cozeLogin",{
-          loginStatus: 1,
-          message: '登录成功',
-          administrator: user.attributes.administrator,
-          error: '',
-          username: user.attributes.username,
-          email: user.attributes.email,
-          password: this.password
-        })
-      }, (error) => {
-        this.$emit("cozeLogin",{
-          loginStatus: 0,
-          message: '登录失败',
-          administrator: 0,
-          error: error,
-          username: this.username,
-          email: this.email,
-          password: this.password
-        })
-      });
-    },
     loginOut() {
-      const currentUser = User.current();
+      const currentUser = AV.User.current();
       if (currentUser) {
         this.verifyText = '你已经退出登录(●￣(ｴ)￣●)'
-        User.logOut();
+        AV.User.logOut();
         this.$emit("cozeLoginOut",{
           status: 1,
           message: "成功退出登录"
@@ -124,7 +63,7 @@ export default {
       }
     },
     setMoodClass() {
-      const Talk = Object.extend('Talk');
+      const Talk = AV.Object.extend('Talk');
       const talk = new Talk();
 
       let photoArr = [{
@@ -184,7 +123,7 @@ export default {
     verifyIdentify() {
       if (!this.isEmail(this.email) || !this.isValidUsername(this.username) || !this.isValidPassword(this.password)) {
         this.verifyText = "请正确输入信息(●￣(ｴ)￣●)"
-        this.$emit("cozeRegister",{
+        this.$emit("cozeLogin",{
           registerStatus: 0,
           message: '输入信息不符合要求',
           administrator: 0,
@@ -197,7 +136,7 @@ export default {
         let administrator = 0
         //判断是否存在talk数据
         new Promise((resolve,reject) => {
-          const query = new Query('Talk');
+          const query = new AV.Query('Talk');
           query.count().then((count) => {
             resolve()
           },(err) => {
@@ -206,13 +145,13 @@ export default {
             resolve()
           });
         }).then(() => {
-          const user = new User();
+          const user = new AV.User();
           user.setUsername(this.username);
           user.setPassword(this.password);
           user.setEmail(this.email);
           user.set('administrator', administrator);
           user.signUp().then((user) => {
-            this.$emit("cozeRegister",{
+            this.$emit("cozeLogin",{
               registerStatus: 1,
               message: '注册成功',
               administrator: administrator,
@@ -231,7 +170,7 @@ export default {
           }, (error) => {
             this.verifyText = error
             // 注册失败（通常是因为用户名已被使用）
-            this.$emit("cozeRegister",{
+            this.$emit("cozeLogin",{
               registerStatus: 0,
               message: '注册失败',
               administrator: administrator,

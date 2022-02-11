@@ -11,11 +11,11 @@
       </div>
       <div class="coze-donate-pay" id="">
         <form v-on:submit.prevent>
-          <div class="coze-pro-common pro-message">
-            <div class="donate-bottom-input coze-pro-common">
+          <div class="pro-common pro-message">
+            <div class="donate-bottom-input pro-common">
               <input autocomplete :style="setVerifyStyle" type="text" placeholder="请输入用户名" v-model="username" name="username">
             </div>
-            <div class="donate-bottom-button coze-pro-common">
+            <div class="donate-bottom-button pro-common">
               <button @click="verifyIdentify">登录</button>
             </div>
           </div>
@@ -29,7 +29,7 @@
     </div>
 
     <div v-show="getShowMoodControl(2)" class="add-mood" id="add-mood">
-      <!--<div v-show="true" class="add-mood" id="add-mood">-->
+    <!--<div v-show="true" class="add-mood" id="add-mood">-->
       <div class="poster-cancel">
         <span class="coze-home-menu-ico" @click="cancelEdit"></span>&nbsp;
       </div>
@@ -81,21 +81,13 @@
 </template>
 
 <script>
-import { User ,File, Object} from 'leancloud-storage'
-let appId = ''
-let appKey = ''
-let masterKey = ''
-let onlyAdministrator = true;
-let avatar = 'https://ooszy.cco.vin/img/blog-note/avatar-aurora.png'
-try {
-  appId = __APP_ID__;
-  appKey = __APP_KEY__;
-  masterKey = __Master_Key__;
-  avatar = __AVATAR_PATH__;
-  onlyAdministrator = __ONLY_ADMINISTRATOR
-}catch (e) {
-  console.warn("你必须在插件中传入appId,appKey,masterKey配置项")
-}
+const AV = require('leancloud-storage');
+const { Query, User } = AV;
+const appId = __APP_ID__;
+const appKey = __APP_KEY__;
+const masterKey = __Master_Key__;
+const avatar = __AVATAR_PATH__;
+let onlyAdministrator = __ONLY_ADMINISTRATOR;
 
 export default {
   name: "AddMood",
@@ -218,8 +210,6 @@ export default {
       this.verifyIdentifyStatus_ = nV
     },
     currentMoodObj() {
-      this.buttonChangeStatus = false
-      this.buttonChangeStatus = !this.buttonChangeStatus
       this.progressUploadArr = []
       this.moodUpdateStatus = false
       this.content = ""
@@ -229,22 +219,6 @@ export default {
   },
   methods: {
     changeMoodStatus() {
-      //判断当前的用户名是否和发布说说的一样，管理员可以编写所有的说说，但是非管理员只能编写自己的
-
-      const currentUser = User.current();
-      let publishUser = this.currentMoodObj.attributes.mood_user
-      let administrator = currentUser.attributes.administrator
-      let currentUsername = currentUser.attributes.username
-
-      if (administrator === 0) {
-        if (publishUser !== currentUsername) {
-          this.resultText = "没有权限修改其他用户说说(￣へ￣)"
-          setTimeout(() => {
-            this.resultText = ""
-          },1500)
-          return
-        }
-      }
 
       this.buttonChangeStatus = !this.buttonChangeStatus
       this.moodUpdateStatus = !this.moodUpdateStatus
@@ -273,7 +247,7 @@ export default {
       }
     },
     edit() {
-      const currentUser = User.current();
+      const currentUser = AV.User.current();
       if (!currentUser) {
         this.resultText = '你已经退出了(●￣(ｴ)￣●)'
         return;
@@ -344,7 +318,7 @@ export default {
             new Promise((resolveUpload,reject) => {
               for (let i = 0; i < uploadPhotoArr.length; i++) {
                 const localFile = uploadPhotoArr[i];
-                const fileUpload = new File(uploadPhotoArr[i].name, localFile);
+                const fileUpload = new AV.File(uploadPhotoArr[i].name, localFile);
                 fileUpload.save({
                   onprogress: (progress) => {
                     let uploadData = {
@@ -387,7 +361,7 @@ export default {
       }
     },
     updateData() {
-      const talk = Object.createWithoutData('Talk', this.currentMoodObj.id);
+      const talk = AV.Object.createWithoutData('Talk', this.currentMoodObj.id);
       talk.set('mood_title', this.title);
       talk.set('mood_content', this.content);
       talk.set("mood_like",0)
@@ -402,7 +376,7 @@ export default {
       })
     },
     saveData(photoDataArr,originArr) {
-      const currentUser = User.current();
+      const currentUser = AV.User.current();
 
       let administrator = 0
       let username = ""
@@ -412,10 +386,9 @@ export default {
       }
 
       const array  = photoDataArr;
-      const Talk = Object.extend('Talk');
+      const Talk = AV.Object.extend('Talk');
       const talk = new Talk();
       talk.set('mood_title', this.title);
-      this.content = this.content.replaceAll("\n","<br>")
       talk.set('mood_content', this.content);
       talk.set("mood_like",0)
       talk.set("mood_comment","")
@@ -446,7 +419,7 @@ export default {
         this.verifyText = "是不是少点什么 (￣へ￣)"
         return;
       }else {
-        User.logIn(this.username, this.password).then((user) => {
+        AV.User.logIn(this.username, this.password).then((user) => {
           this.verifyText = "欢迎小主(●￣(ｴ)￣●)"
           this.verifyIdentifyStatus_ = true
           this.showMoodControl_ = true

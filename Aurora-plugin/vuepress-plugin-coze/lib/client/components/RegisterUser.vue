@@ -1,10 +1,9 @@
 <template>
-  <canvas v-show="registerSuccess" id="coze-flowers-canvas"></canvas>
   <div class="coze-register-user">
     <div class="add-mood-pwd coze-login" id="add-mood-pwd">
-      <!--<div class="poster-cancel">
+      <div class="poster-cancel">
         <span class="coze-home-menu-ico"></span>&nbsp;
-      </div>-->
+      </div>
       <div id="pro-single-mood" class="pro-single pro-message">
         <div class="add-mood-pwd" id="mood-verify-pwd">
           <span>{{verifyText}}</span>
@@ -12,11 +11,15 @@
       </div>
       <div class="coze-donate-pay" id="">
         <form v-on:submit.prevent>
-          <div class="pro-single pro-message">
-            <div class="donate-bottom-input">
+          <div class="pro-common pro-message">
+            <div class="donate-bottom-input pro-common">
               <input autocomplete type="text" placeholder="请输入用户名" v-model="username" name="username">
             </div>
-            <br>
+            <!--<div class="donate-bottom-button pro-common">
+              <button @click="verifyIdentify">注册</button>
+            </div>-->
+          </div>
+          <div class="pro-single pro-message">
             <div class="donate-bottom-input">
               <input autocomplete placeholder="输入6到20位包含数字,字母密码" v-model="password" name="password" type="password">
             </div>
@@ -26,11 +29,11 @@
             </div>
           </div>
 
-          <div class="coze-pro-common pro-message register-button">
-            <div class="donate-bottom-button coze-pro-common">
+          <div class="pro-common pro-message register-button">
+            <div class="donate-bottom-button pro-common">
               <button @click="verifyIdentify">注册</button>
             </div>
-            <div class="donate-bottom-button coze-pro-common">
+            <div class="donate-bottom-button pro-common">
               <button @click="loginOut">登出</button>
             </div>
           </div>
@@ -41,23 +44,13 @@
 </template>
 
 <script>
-import {flowers} from "../public/js/flowers";
-import { Query, User,Object } from 'leancloud-storage';
-let appId = ''
-let appKey = ''
-let masterKey = ''
-let onlyAdministrator = true;
-let avatar = 'https://ooszy.cco.vin/img/blog-note/avatar-aurora.png'
-try {
-  appId = __APP_ID__;
-  appKey = __APP_KEY__;
-  masterKey = __Master_Key__;
-  avatar = __AVATAR_PATH__;
-  onlyAdministrator = __ONLY_ADMINISTRATOR
-}catch (e) {
-  console.warn("你必须在插件中传入appId,appKey,masterKey配置项")
-}
-import AddMood from "./AddMood.vue";
+const AV = require('leancloud-storage');
+const { Query, User } = AV;
+const appId = __APP_ID__;
+const appKey = __APP_KEY__;
+const masterKey = __Master_Key__;
+const avatar = __AVATAR_PATH__;
+import AddMood from "./AddMood";
 export default {
   name: "RegisterUser",
   components: {
@@ -69,21 +62,20 @@ export default {
       username:'',
       email: '',
       verifyText: '请注册(●￣(ｴ)￣●)',
-      registerSuccess: false
     }
   },
   methods: {
     loginOut() {
-      const currentUser = User.current();
+      const currentUser = AV.User.current();
       if (currentUser) {
         this.verifyText = '你已经退出登录(●￣(ｴ)￣●)'
-        User.logOut();
+        AV.User.logOut();
       } else {
         this.verifyText = '你未登录或者注册(●￣(ｴ)￣●)'
       }
     },
     setMoodClass() {
-      const Talk = Object.extend('Talk');
+      const Talk = AV.Object.extend('Talk');
       const talk = new Talk();
 
       let photoArr = [{
@@ -140,87 +132,47 @@ export default {
       }
       return true
     },
-    showSuccessFlowers() {
-      let flowersNum = 1600
-      if (document.body.clientWidth < 719) {
-        flowersNum = 670
-      }
-      flowers(flowersNum)
-      setTimeout(() => {
-        this.registerSuccess = false
-      },5000)
-    },
     verifyIdentify() {
-      this.registerSuccess = false
-
-      if (!this.isValidUsername(this.username)) {
-        this.verifyText = "用户名重复或格式错误(●￣(ｴ)￣●)"
-        setTimeout(() => {
-          this.verifyText = '请注册(●￣(ｴ)￣●)'
-        },3000)
-        return
-      }
-
-      if (!this.isValidPassword(this.password)) {
-        this.verifyText = "密码重复或格式错误(●￣(ｴ)￣●)"
-        setTimeout(() => {
-          this.verifyText = '请注册(●￣(ｴ)￣●)'
-        },3000)
-        return
-      }
-
-      if (!this.isEmail(this.email)) {
-        this.verifyText = "邮箱重复或格式错误(●￣(ｴ)￣●)"
-        setTimeout(() => {
-          this.verifyText = '请注册(●￣(ｴ)￣●)'
-        },3000)
-        return
-      }
-
-      let administrator = 0
-      //判断是否存在talk数据
-      new Promise((resolve,reject) => {
-        const query = new Query('Talk');
-        query.count().then((count) => {
-          resolve()
-        },(err) => {
-          //没有数据，不存在这个TalkClass
-          administrator = 1
-          resolve()
-        });
-      }).then(() => {
-        const user = new User();
-        user.setUsername(this.username);
-        user.setPassword(this.password);
-        user.setEmail(this.email);
-        user.set('administrator', administrator);
-        user.signUp().then((user) => {
-          this.registerSuccess = true
-          this.showSuccessFlowers()
-          // 注册成功
-          if (administrator === 1) {
-            this.verifyText = "注册成功,正在进行设置,请等待"
-            this.setMoodClass()
-          }else {
-            this.verifyText = "注册成功,欢迎小主(●￣(ｴ)￣●)"
-          }
-        }, (error) => {
-          this.verifyText = error
-          // 注册失败（通常是因为用户名已被使用）
-          setTimeout(() => {
-            this.verifyText = '请注册(●￣(ｴ)￣●)'
-          },3000)
-        });
-      })
-
-      /*if (!this.isEmail(this.email) || !this.isValidUsername(this.username) || !this.isValidPassword(this.password)) {
+      if (!this.isEmail(this.email) || !this.isValidUsername(this.username) || !this.isValidPassword(this.password)) {
         this.verifyText = "请正确输入信息(●￣(ｴ)￣●)"
         setTimeout(() => {
           this.verifyText = '请注册(●￣(ｴ)￣●)'
         },3000)
       }else {
-
-      }*/
+        let administrator = 0
+        //判断是否存在talk数据
+        new Promise((resolve,reject) => {
+          const query = new AV.Query('Talk');
+          query.count().then((count) => {
+            resolve()
+          },(err) => {
+            //没有数据，不存在这个TalkClass
+            administrator = 1
+            resolve()
+          });
+        }).then(() => {
+          const user = new AV.User();
+          user.setUsername(this.username);
+          user.setPassword(this.password);
+          user.setEmail(this.email);
+          user.set('administrator', administrator);
+          user.signUp().then((user) => {
+            // 注册成功
+            if (administrator === 1) {
+              this.verifyText = "注册成功,正在进行设置,请等待"
+              this.setMoodClass()
+            }else {
+              this.verifyText = "注册成功,欢迎小主(●￣(ｴ)￣●)"
+            }
+          }, (error) => {
+            this.verifyText = error
+            // 注册失败（通常是因为用户名已被使用）
+            setTimeout(() => {
+              this.verifyText = '请注册(●￣(ｴ)￣●)'
+            },3000)
+          });
+        })
+      }
     },
   }
 }

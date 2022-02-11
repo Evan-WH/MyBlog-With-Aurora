@@ -3,16 +3,16 @@
     <div class="coze-mood-item" id="coze-mood-item">
       <div class="mood-item-left mood-item-img-parent" id="mood-item-left">
         <div class="mood-item-img" id="coze-mood-item-img">
-          <img :src="$withBase(getAvatar)" alt="">
+          <img :src="getAvatar" alt="">
         </div>
       </div>
       <div class="mood-item-right" id="mood-item-right">
         <div class="coze-mood-item-content">
           <div id="mood-item-content" class="mood-item-content mood-item-right-common">
-            <span v-html="moodItem.attributes.mood_content"></span>
+            <span>{{moodItem.attributes.mood_content}}</span>
             <div class="coze-mood-time">
-              <span>@{{moodItem.attributes.mood_user}}</span>
-              <span :data="getUpdatedTime">&nbsp;&nbsp;发布于: {{cozeYear}}-{{cozeMonth}}-{{cozeDay}}</span>
+              <span>@{{moodItem.attributes.mood_user}}</span>&nbsp;&nbsp;
+              <span>更新于: {{getUpdatedTime}}</span>
             </div>
             <slot name="coze-mood-content"></slot>
           </div>
@@ -25,7 +25,7 @@
       </div>
       <div class="mood-img-right" id="mood-img-right">
         <div class="mood-li-control">
-          <li v-for="(item,index) in moodItem.attributes.mood_photos" :data="item.photoUrl" :key="item.photoUrl" id="mood-img-li">
+          <li v-for="(item,index) in moodItem.attributes.mood_photos" :key="index" id="mood-img-li">
             <img @click="openImg" class="medium-zoom-image" id="mood-bottom-img" :src="item.photoUrl" :alt="item.photoName">
           </li>
         </div>
@@ -40,8 +40,12 @@
         </div>
         <div :class="getMoodLike" class="mood-edit-single-common">
           <span :class="{'mood_like_love_active': moodLikeStatus}" @click="moodLove($event,moodItem)" class="aurora-coze-font aurora-coze-custom-love"></span>&nbsp;
-          <span>{{getCozeMoodLink}}</span>
+          <span>{{moodLink === 0 ? "" : moodLink}}</span>
         </div>
+        <!--<div class="mood-edit-single-common">
+          <poster :title="moodItem.attributes.mood_title" :content="content" />
+          &lt;!&ndash;<span @click="moodPoster($event,moodItem)" class="aurora-coze-font aurora-coze-custom-poster"></span>&ndash;&gt;
+        </div>-->
         <div class="mood-edit-single-common">
           <span @click="moodEdit($event,moodItem)" class="aurora-coze-font aurora-coze-custom-edit"></span>
         </div>
@@ -52,23 +56,13 @@
 </template>
 
 <script>
-import { Query,Object } from 'leancloud-storage'
-let appId = ''
-let appKey = ''
-let masterKey = ''
-let onlyAdministrator = true;
-let avatar = 'https://ooszy.cco.vin/img/blog-note/avatar-aurora.png'
-try {
-  appId = __APP_ID__;
-  appKey = __APP_KEY__;
-  masterKey = __Master_Key__;
-  avatar = __AVATAR_PATH__;
-  onlyAdministrator = __ONLY_ADMINISTRATOR
-}catch (e) {
-  console.warn("你必须在插件中传入appId,appKey,masterKey配置项")
-  console.warn(e)
-}
-import gsap from "gsap";
+const AV = require('leancloud-storage');
+const { User } = AV;
+const appId = __APP_ID__;
+const appKey = __APP_KEY__;
+const masterKey = __Master_Key__;
+const avatar = __AVATAR_PATH__;
+
 import mediumZoom from 'medium-zoom'
 export default {
   name: "MoodItem",
@@ -76,22 +70,15 @@ export default {
     return {
       title: '',
       content: '',
-      moodLikeStatus: false,
-      setLikeSuccess: true,
-
-      cozeYearTemp: 0,
-      cozeMonthTemp: 0,
-      cozeDayTemp: 0,
-      cozeLikeTemp: 0,
-      showImageHeight: false
+      moodLink: 0,
+      moodLikeStatus: false
     }
   },
   props: {
     moodItem: {},
   },
   created() {
-    let moodLike = this.moodItem.attributes.mood_like
-    gsap.to(this.$data, {duration: 1.5, cozeLikeTemp: moodLike, ease: 'sine'})
+    this.moodLink = this.moodItem.attributes.mood_like
   },
   mounted() {
     let cookie = document.cookie;
@@ -111,26 +98,9 @@ export default {
     })
   },
   computed: {
-    getCozeMoodLink() {
-      return this.cozeLikeTemp.toFixed(0)
-    },
-    cozeYear() {
-      return this.cozeYearTemp.toFixed(0)
-    },
-    cozeMonth() {
-      return this.cozeMonthTemp.toFixed(0)
-    },
-    cozeDay() {
-      return this.cozeDayTemp.toFixed(0)
-    },
     getUpdatedTime() {
-      let updatedAt = this.moodItem.createdAt;
-      let day = new Date(updatedAt).getDate();
-      let month = new Date(updatedAt).getMonth() + 1;
-      let year = new Date(updatedAt).getFullYear();
-      gsap.to(this.$data, {duration: 1.1, cozeYearTemp:year, ease: 'sine'})
-      gsap.to(this.$data, {duration: 2, cozeMonthTemp: month, ease: 'sine'})
-      gsap.to(this.$data, {duration: 2, cozeDayTemp: day, ease: 'sine'})
+      let updatedAt = this.moodItem.updatedAt;
+      return this.getLocalTime(updatedAt);
     },
     getMoodLike() {
       if (this.moodLikeStatus) {
@@ -161,8 +131,7 @@ export default {
         moodItem
       })
     },
-    setLikeNum(moodItem) {
-      this.setLikeSuccess = false
+    moodLove(e,moodItem) {
       let cookie = document.cookie;
       let mood_link_status = false
       new Promise((resolve,reject) => {
@@ -181,34 +150,28 @@ export default {
       }).then(() => {
         if (!mood_link_status) {
           //没有点赞
-          const query = new Query('Talk');
+          const query = new AV.Query('Talk');
           query.get(this.moodItem.id).then((data) => {
             const mood_like = data.get('mood_like');
-            const todo = Object.createWithoutData('Talk', this.moodItem.id);
+            const todo = AV.Object.createWithoutData('Talk', this.moodItem.id);
             todo.set('mood_like', mood_like + 1);
             todo.save().then(() => {
-              let expiresTime = new Date().getTime() + 864000000;
-              let expires = new Date(expiresTime);
-              document.cookie = "mood_like_status_" + this.moodItem.id + "=1;expires=" + expires + ";";
-              this.cozeLikeTemp = mood_like + 1
+              document.cookie="mood_like_status_" + this.moodItem.id + "=1";
+              this.moodLink = mood_like + 1
               this.moodLikeStatus = true
-              this.setLikeSuccess = true
             });
           });
         }else {
           //减赞
-          const query = new Query('Talk');
+          const query = new AV.Query('Talk');
           query.get(this.moodItem.id).then((data) => {
             const mood_like = data.get('mood_like');
-            const todo = Object.createWithoutData('Talk', this.moodItem.id);
+            const todo = AV.Object.createWithoutData('Talk', this.moodItem.id);
             todo.set('mood_like', mood_like - 1);
             todo.save().then(() => {
-              let expiresTime = new Date().getTime() + 864000000;
-              let expires = new Date(expiresTime);
-              document.cookie = "mood_like_status_" + this.moodItem.id + "=0;expires=" + expires + ";";
-              this.cozeLikeTemp = mood_like - 1
+              document.cookie="mood_like_status_" + this.moodItem.id + "=0";
+              this.moodLink = mood_like - 1
               this.moodLikeStatus = false
-              this.setLikeSuccess = true
             });
           });
         }
@@ -216,22 +179,6 @@ export default {
 
       this.$emit("moodLove", {
         moodItem
-      })
-    },
-    moodLove(e,moodItem) {
-      new Promise((resolve,reject) => {
-        if (!this.setLikeSuccess) {
-          let loadingLikeStatus = setInterval(() =>{
-            if (this.setLikeSuccess) {
-              clearInterval(loadingLikeStatus)
-              resolve()
-            }
-          },50)
-        }else {
-          resolve()
-        }
-      }).then(() => {
-        this.setLikeNum(moodItem)
       })
     },
     moodPoster(e,moodItem) {
@@ -249,3 +196,9 @@ export default {
   }
 }
 </script>
+
+<style scoped lang="css">
+.mood_like_active {
+  color: red;
+}
+</style>

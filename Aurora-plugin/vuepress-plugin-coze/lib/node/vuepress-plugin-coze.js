@@ -7,6 +7,12 @@ const AV = require('leancloud-storage');
 const vuepressPluginCoze = ({appId,appKey,masterKey,avatarPath,registerPath,onlyAdministrator }) => {
     return {
         onInitialized: async (app) => {
+
+            AV.init({
+                appId: appId,
+                appKey: appKey
+            });
+
             if (registerPath === undefined || registerPath === null) {
                 registerPath = "/aurora-register"
             }
@@ -17,17 +23,6 @@ const vuepressPluginCoze = ({appId,appKey,masterKey,avatarPath,registerPath,only
                 frontmatter: {
                     layout: 'CozeMood',
                     slug: 'aurora-coze-mood',
-                },
-                // 设置 markdown 内容
-                content: "",
-            })
-
-            const photoPage = await createPage(app, {
-                path: '/photo',
-                // 设置 frontmatter
-                frontmatter: {
-                    layout: 'CozePhoto',
-                    slug: 'aurora-photo',
                 },
                 // 设置 markdown 内容
                 content: "",
@@ -44,11 +39,12 @@ const vuepressPluginCoze = ({appId,appKey,masterKey,avatarPath,registerPath,only
                 content: "",
             })
 
+
             // 把它添加到 `app.pages`
             app.pages.push(AuroraCozePage)
             app.pages.push(RegisterUserPage)
-            app.pages.push(photoPage)
         },
+        name: 'vuepress-plugin-coze',
         define: {
             __APP_ID__: appId,
             __APP_KEY__: appKey,
@@ -56,8 +52,6 @@ const vuepressPluginCoze = ({appId,appKey,masterKey,avatarPath,registerPath,only
             __AVATAR_PATH__: avatarPath,
             __ONLY_ADMINISTRATOR: onlyAdministrator
         },
-        name: 'vuepress-plugin-coze',
-
         multiple: false,
         clientAppEnhanceFiles: utils_1.path.resolve(__dirname, '../client/clientAppEnhance.js')
     };
