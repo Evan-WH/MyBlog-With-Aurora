@@ -373,10 +373,10 @@ module.exports = {
         logo: "https://s4.ax1x.com/2022/01/15/7JHV0J.png",
 
         //文章懒加载图片 仅限文章，首页文章占位图片并不是这个
-        lazyLoadingImg: "https://ooszy.cco.vin/img/blog-public/ljz.gif",
+        lazyLoadingImg: "https://s1.ax1x.com/2022/05/01/OCKByF.gif",
 
         //这是首页文章列表懒加载图片
-        homePageLazyLoadingImg: 'https://ooszy.cco.vin/img/blog-public/ljz.gif',
+        homePageLazyLoadingImg: 'https://s1.ax1x.com/2022/05/01/OCKByF.gif',
 
         //是否启用定制首页随机一言，默认未开启，使用随机一言 接口为https://international.v1.hitokoto.cn/?c=b&max_length=45
         customRandomSay: false,
@@ -858,31 +858,27 @@ module.exports = {
 
         //首页背景图片数组，考虑到使用随机图片，打开网站速度变慢，所以移除随机图片，使用自己设置的图片链接
         homeWps: [
-            // 'https://ooszy.cco.vin/img/blog-note/illust_74502138_20211008_183343.png',
-            "https://picoss.cco.vin/animate/wall/404901.png",
-            // "https://picoss.cco.vin/animate/wall/734386.png",
-            // "https://picoss.cco.vin/animate/wall/5332.png",
-            // "https://picoss.cco.vin/animate/wall/6202.png", //使用网络上的图片
-            // '/bg/1.jpg', //使用本地图片
-            // '/bg/3.jpg',
+            'https://s1.ax1x.com/2022/05/01/OCMocT.jpg',
+            'https://s1.ax1x.com/2022/05/01/OCMocT.jpg',
+            'https://s1.ax1x.com/2022/05/01/OCMocT.jpg',
+            'https://s1.ax1x.com/2022/05/01/OCMocT.jpg',
+
         ],
-        /* homeWps: [
-             '/bg/1.jpg',
-             '/bg/2.jpg',
-             '/bg/3.jpg',
-             '/bg/4.jpg',
-             '/bg/5.jpg',
-         ],*/
+        // homeWps: [
+        //     'https://s1.ax1x.com/2022/05/01/OCMocT.jpg',
+        //     '/bg/3.jpg',
+        //     'https://s1.ax1x.com/2022/05/01/OCMocT.jpg',
+        // ],
 
         //手机端首页背景图片
         homeWpsMobile: [
-            // "https://picoss.cco.vin/animate/wall/404901.png",
-            "https://ooszy.cco.vin/img/blog-note/929842.jpg",
+            'https://s1.ax1x.com/2022/05/01/OCMocT.jpg',
+            'https://s1.ax1x.com/2022/05/01/OCMocT.jpg',
         ],
-        // homeWpsMobile: [
-        //     // '/bg/1.jpg',
-        //     // '/bg/3.jpg',
-        // ],
+        homeWpsMobile: [
+            // '/bg/1.jpg',
+            '/bg/3.jpg',
+        ],
 
         //首页文章显示条数，默认为4，此值不推荐设置太大
         pageSize: 4,
